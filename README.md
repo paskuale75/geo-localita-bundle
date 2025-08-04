@@ -13,7 +13,7 @@ composer require pellicanipasquale/geo-localita-bundle
 ```
 
 Aggiungi questa configurazione al file config/packages/doctrine.yaml del tuo progetto Symfony:
-```bash
+```yaml
 doctrine:
     orm:
         mappings:
