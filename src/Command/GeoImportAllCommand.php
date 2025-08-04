@@ -30,6 +30,7 @@ class GeoImportAllCommand extends Command
         private readonly EntityManagerInterface $em,
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
+        #[\Symfony\Component\DependencyInjection\Attribute\Autowire('%kernel.project_dir%')]
         string $projectDir
     ) {
         parent::__construct();
