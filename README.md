@@ -18,7 +18,7 @@ composer require pellicanipasquale/geo-localita-bundle
   PasqualePellicani\GeoLocalitaBundle\GeoLocalitaBundle::class => ['all' => true],
   ```
 
-3. Aggiungi questa configurazione al file config/packages/doctrine.yaml del tuo progetto Symfony:
+3. Aggiungi questa configurazione al file `config/packages/doctrine.yaml` del tuo progetto Symfony:
 
 ```yaml
 doctrine:
@@ -31,8 +31,18 @@ doctrine:
                 prefix: 'PasqualePellicani\GeoLocalitaBundle\Entity'
                 alias: GeoLocalitaBundle
 ```
+4. Mappare i servizi, nel `config/services.yaml` aggiungi:
 
-4. Generazione delle migration
+```yaml
+services:
+    PasqualePellicani\GeoLocalitaBundle\:
+        resource: '../vendor/pasqualepellicani/geo-localita-bundle/src/*'
+        exclude: '../vendor/pasqualepellicani/geo-localita-bundle/src/{Entity,Tests,Migrations,Kernel.php}'
+        autowire: true
+        autoconfigure: true
+```
+
+5. Generazione delle migration
 
 Dopo aver configurato Doctrine come sopra, puoi generare la migration per creare le tabelle del bundle:
 
