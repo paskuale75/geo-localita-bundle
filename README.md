@@ -9,7 +9,8 @@
 1. Installa il bundle via Composer:
 
 ```bash
-composer require pellicanipasquale/geo-localita-bundle
+composer require pasqualepellicani/geo-localita-bundle
+
 ```
 
 2. Aggiungi il bundle al file `config/bundles.php`:
