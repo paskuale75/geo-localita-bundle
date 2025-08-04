@@ -35,3 +35,15 @@
 
 ```bash
 composer require pellicanipasquale/geo-localita-bundle
+
+
+## Importazione dei dati
+
+Per informazioni dettagliate su come importare i file di DatabaseComuni.it nel database del tuo progetto, consulta la guida dedicata:
+
+👉 [Guida all’importazione dei dati](IMPORT.md)
+
+All’interno troverai istruzioni passo-passo su:
+- Dove posizionare i file scaricati dal sito DatabaseComuni.it
+- Come lanciare il comando di importazione Symfony
+- Opzioni avanzate e troubleshooting
