@@ -1,0 +1,4 @@
+/var/data/*
+!/var/data/README.txt
+/vendor
+/.env

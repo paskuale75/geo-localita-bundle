@@ -1,0 +1,24 @@
+{
+    "name": "pasqualepellicani/geo-localita-bundle",
+    "description": "Bundle Symfony per gestione località e anagrafiche (Italia + mondo).",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "PasqualePellicani\\GeoLocalitaBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "paskuale75",
+            "email": "pellicanipasquale@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/framework-bundle": "^7.3",
+        "symfony/console": "^7.3",
+        "doctrine/orm": "^3.5",
+        "phpoffice/phpspreadsheet": "^4.5"
+    }
+}
