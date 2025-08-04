@@ -34,7 +34,7 @@ class GeoImportAllCommand extends Command
         string $projectDir
     ) {
         parent::__construct();
-        $this->basePath = $projectDir . '/var/data/geonames/';
+        $this->basePath = $projectDir . '/var/data/content/';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
