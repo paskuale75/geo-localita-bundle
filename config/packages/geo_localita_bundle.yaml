@@ -1,0 +1,9 @@
+doctrine:
+    orm:
+        mappings:
+            GeoLocalitaBundle:
+                is_bundle: false
+                type: attribute # o annotation
+                dir: '%kernel.project_dir%/vendor/pasqualepellicani/geo-localita-bundle/src/Entity'
+                prefix: 'PasqualePellicani\GeoLocalitaBundle\Entity'
+                alias: GeoLocalitaBundle

@@ -4,6 +4,38 @@
 
 ---
 
+## 🏁 Configurazione rapida
+
+Dopo aver installato il bundle via Composer:
+
+```bash
+composer require pellicanipasquale/geo-localita-bundle
+```
+
+Aggiungi questa configurazione al file config/packages/doctrine.yaml del tuo progetto Symfony:
+```bash
+doctrine:
+    orm:
+        mappings:
+            GeoLocalitaBundle:
+                is_bundle: false
+                type: attribute # oppure "annotation" se usi ancora le annotation
+                dir: '%kernel.project_dir%/vendor/pasqualepellicani/geo-localita-bundle/src/Entity'
+                prefix: 'PasqualePellicani\GeoLocalitaBundle\Entity'
+                alias: GeoLocalitaBundle
+```
+
+### Generazione delle migration
+
+Dopo aver configurato Doctrine come sopra, puoi generare la migration per creare le tabelle del bundle:
+
+```bash
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+```
+
+---
+
 ## ✨ Funzionalità
 
 - 📦 **Import automatico** di tutti i dati geografici italiani da DatabaseComuni.it (*dati NON inclusi per motivi di licenza*).
@@ -30,12 +62,6 @@
   (Vedi [www.databasecomuni.it](https://www.databasecomuni.it) per l’acquisto).
 
 ---
-
-## 🏁 Utilizzo rapido
-
-```bash
-composer require pellicanipasquale/geo-localita-bundle
-
 
 ## Importazione dei dati
 
