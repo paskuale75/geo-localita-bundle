@@ -6,13 +6,20 @@
 
 ## 🏁 Configurazione rapida
 
-Dopo aver installato il bundle via Composer:
+1. Installa il bundle via Composer:
 
 ```bash
 composer require pellicanipasquale/geo-localita-bundle
 ```
 
-Aggiungi questa configurazione al file config/packages/doctrine.yaml del tuo progetto Symfony:
+2. Aggiungi il bundle al file `config/bundles.php`:
+
+  ```php
+  PasqualePellicani\GeoLocalitaBundle\GeoLocalitaBundle::class => ['all' => true],
+  ```
+
+3. Aggiungi questa configurazione al file config/packages/doctrine.yaml del tuo progetto Symfony:
+
 ```yaml
 doctrine:
     orm:
@@ -25,7 +32,7 @@ doctrine:
                 alias: GeoLocalitaBundle
 ```
 
-### Generazione delle migration
+4. Generazione delle migration
 
 Dopo aver configurato Doctrine come sopra, puoi generare la migration per creare le tabelle del bundle:
 
