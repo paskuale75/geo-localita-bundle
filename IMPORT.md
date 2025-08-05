@@ -53,6 +53,13 @@ Dopo aver posizionato i files lancia questo comando per importare i dati effetti
 
 ```bash
 php bin/console geo:import:all
+```
+
+:information_source: Se la memoria libera non è sufficiente lancia il comando così
+
+```bash
+php -d memory_limit=-1 bin/console geo:import:all
+```
 
 # Il comando importerà in sequenza: nazioni, regioni, province, comuni, CAP, coordinate e città estere.
 
