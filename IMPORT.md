@@ -33,17 +33,23 @@ Scarica gratuitamente da [https://download.geonames.org/export/dump/](https://do
 
 ## 📂 Dove mettere i file?
 
-Copia tutti i file dati all’interno della seguente cartella del bundle:
+**Copia tutti i file dati all’interno della seguente cartella**
 
-/var/data/content
+/var/data/geo_localita/
 
-*(La cartella è già presente nel pacchetto, con un file README.txt di esempio)*
+**Se non esiste, puoi crearla a mano oppure lanciare:**
+
+ ```bash
+ php bin/console geo:setup-dirs
+ ```
+
+## ⚠️ Non mettere i file dati nella cartella dei vendor, né in cartelle troppo generiche!
 
 ---
 
 ## 🚦 **Import finale**
 
-Dopo aver posizionato i file:
+Dopo aver posizionato i files lancia questo comando per importare i dati effettivi nel db:
 
 ```bash
 php bin/console geo:import:all
