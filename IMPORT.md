@@ -35,7 +35,7 @@ Scarica gratuitamente da [https://download.geonames.org/export/dump/](https://do
 
 Copia tutti i file dati all’interno della seguente cartella del bundle:
 
-/var/data
+/var/data/content
 
 *(La cartella è già presente nel pacchetto, con un file README.txt di esempio)*
 
