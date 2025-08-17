@@ -26,6 +26,9 @@ class Nazione
     #[ORM\Column(type: "string", length: 100, nullable: true)]
     private ?string $capitale = null;
 
+    #[ORM\Column(name: 'codice_z', type: 'string', length: 4, nullable: true, unique: true)]
+    private ?string $codiceZ = null;
+
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $area = null;
 
@@ -74,6 +77,14 @@ class Nazione
 
     public function getCapitale(): ?string { return $this->capitale; }
     public function setCapitale(?string $capitale): self { $this->capitale = $capitale; return $this; }
+
+    public function getCodiceZ(): ?string{return $this->codiceZ;}
+
+    public function setCodiceZ(?string $codiceZ): self
+    {
+        $this->codiceZ = $codiceZ ? strtoupper($codiceZ) : null; // es. Z404
+        return $this;
+    }
 
     public function getArea(): ?int { return $this->area; }
     public function setArea(?int $area): self { $this->area = $area; return $this; }

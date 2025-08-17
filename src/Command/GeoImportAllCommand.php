@@ -45,6 +45,7 @@ class GeoImportAllCommand extends Command
         $this->connection->beginTransaction();
         try {
             $this->importNazioni($io);
+            $this->importCodiciZ($io);
             $this->importRegioni($io);
             $this->importProvince($io);
             $this->importCitta($io);
@@ -366,5 +367,133 @@ class GeoImportAllCommand extends Command
             $this->em->persist($citta);
         }
         $io->success('Import città estere ok!');
+    }
+
+    private function importCodiciZ(SymfonyStyle $io): void
+    {
+        $io->section('Import codici Zxxx (ANPR) ...');
+
+        $fileName = 'tabella_2_statiesteri.xlsx';
+        $filePath = $this->basePath . $fileName;
+
+        // 1) Se manca il file locale, prova a scaricarlo dalla fonte ufficiale
+        if (!file_exists($filePath)) {
+            $io->text('File ANPR non trovato in var/data, tentativo di download ...');
+            $url = 'https://www.anagrafenazionale.interno.it/wp-content/uploads/tabella_2_statiesteri.xlsx';
+
+            if (!is_dir($this->basePath)) {
+                @mkdir($this->basePath, 0775, true);
+            }
+
+            try {
+                // scarica in modo semplice senza dipendenze aggiuntive
+                $data = @file_get_contents($url);
+                if ($data === false) {
+                    $io->warning('Download fallito (non blocco l\'import). URL: ' . $url);
+                    return;
+                }
+                file_put_contents($filePath, $data);
+                $io->text("Scaricato: $filePath");
+            } catch (\Throwable $e) {
+                $io->warning('Download fallito: ' . $e->getMessage());
+                return;
+            }
+        }
+
+        // 2) Parse XLSX (colonne attese: CODISO3166_1_ALPHA3, CODAT)
+        try {
+            $spreadsheet = IOFactory::load($filePath);
+        } catch (\Throwable $e) {
+            $io->warning('Impossibile leggere XLSX ANPR: ' . $e->getMessage());
+            return;
+        }
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows  = $sheet->toArray(null, true, true, true);
+
+        if (count($rows) < 2) {
+            $io->warning('File ANPR vuoto o non valido.');
+            return;
+        }
+
+        // 2.a. individua riga header entro le prime 5 righe
+        $headerRowIndex = null;
+        $iso3Col = null;
+        $codatCol = null;
+
+        $norm = function ($v) {
+            return strtoupper(trim((string)$v));
+        };
+
+        for ($r = 1; $r <= min(5, count($rows)); $r++) {
+            $head = array_map($norm, $rows[$r] ?? []);
+            if (!$head) continue;
+
+            // cerca le intestazioni più comuni
+            $foundIso3 = null;
+            $foundCodat = null;
+            foreach ($head as $col => $name) {
+                if (in_array($name, ['CODISO3166_1_ALPHA3', 'ISO3', 'CODISO3'], true)) $foundIso3 = $col;
+                if (in_array($name, ['CODAT', 'CODICE AT', 'COD.AT', 'CODICE_AT'], true)) $foundCodat = $col;
+            }
+            if ($foundIso3 && $foundCodat) {
+                $headerRowIndex = $r;
+                $iso3Col = $foundIso3;
+                $codatCol = $foundCodat;
+                break;
+            }
+        }
+
+        if (!$headerRowIndex) {
+            $io->warning('Header con colonne ISO3/CODAT non trovato nell\'XLSX ANPR.');
+            return;
+        }
+
+        // 3) Applica mapping ISO3 -> CODAT sulle Nazioni
+        $updated = 0;
+        $skipped = 0;
+        $notFound = 0;
+
+        // percorri le righe dati
+        for ($r = $headerRowIndex + 1; $r <= count($rows); $r++) {
+            $row = $rows[$r] ?? null;
+            if (!$row) continue;
+
+            $iso3  = $norm($row[$iso3Col] ?? '');
+            $codat = $norm($row[$codatCol] ?? '');
+
+            if ($iso3 === '' || $codat === '') {
+                $skipped++;
+                continue;
+            }
+            if (!preg_match('/^Z\d{3}$/', $codat)) {
+                $skipped++;
+                continue;
+            }
+
+            // trova la nazione per ISO3
+            $nazione = $this->em->getRepository(Nazione::class)->findOneBy(['codiceIso3' => $iso3]);
+            if (!$nazione) {
+                $notFound++;
+                continue;
+            }
+
+            // evita scritture ridondanti
+            if ($nazione->getCodiceZ() !== $codat) {
+                $nazione->setCodiceZ($codat);
+                $this->em->persist($nazione);
+                $updated++;
+            }
+
+            // flush batch
+            if (($updated % 250) === 0) {
+                $this->em->flush();
+                $this->em->clear();
+            }
+        }
+
+        $this->em->flush();
+
+        $io->success("Codici Zxxx applicati. Aggiornati={$updated}, Skippati={$skipped}, ISO3 non trovati={$notFound}");
     }
 }
