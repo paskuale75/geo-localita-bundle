@@ -103,6 +103,7 @@ class GeoImportAllCommand extends Command
 
             $this->em->persist($nazione);
         }
+        $this->em->flush();
         $io->success('Import nazioni ok!');
     }
 
